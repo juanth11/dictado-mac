@@ -1,6 +1,27 @@
 <p align="center"><img src="docs/icono.png" width="128" alt="Ícono de Dictado"></p>
 
-# Dictado
+<h1 align="center">Dictado</h1>
+
+<p align="center"><b>Seis apps de pago en una sola, gratis, que corre entera en tu Mac.</b><br>
+Hablas y escribe. Copias y lo recuerda. Miras el notch y sabes qué sigue.</p>
+
+<p align="center">
+  <img alt="macOS 26+" src="https://img.shields.io/badge/macOS-26%2B-000000?logo=apple&logoColor=white">
+  <img alt="Apple Silicon" src="https://img.shields.io/badge/Apple%20Silicon-M1%2B-000000?logo=apple&logoColor=white">
+  <img alt="Swift 6" src="https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white">
+  <img alt="SwiftUI y AppKit" src="https://img.shields.io/badge/SwiftUI%20%2B%20AppKit-nativo-0A84FF?logo=swift&logoColor=white">
+  <img alt="Sin dependencias" src="https://img.shields.io/badge/dependencias-0-34C759">
+  <img alt="448 pruebas" src="https://img.shields.io/badge/pruebas-448%20en%20verde-34C759">
+  <img alt="Licencia MIT" src="https://img.shields.io/badge/licencia-MIT-lightgrey">
+</p>
+<p align="center">
+  <img alt="Voz en el Mac" src="https://img.shields.io/badge/voz-100%25%20en%20el%20Mac-8E8E93">
+  <img alt="IA local de Apple" src="https://img.shields.io/badge/IA-Apple%20Intelligence%20local-8E8E93">
+  <img alt="Sin cuentas" src="https://img.shields.io/badge/cuentas-ninguna-8E8E93">
+  <img alt="Memoria" src="https://img.shields.io/badge/memoria-~40%20MB-8E8E93">
+  <img alt="CPU en reposo" src="https://img.shields.io/badge/CPU%20en%20reposo-0%25-8E8E93">
+  <img alt="Hecha con Claude Code" src="https://img.shields.io/badge/hecha%20con-Claude%20Code-D97757?logo=anthropic&logoColor=white">
+</p>
 
 Una sola app nativa de macOS, liviana (unos 40 MB de memoria y 0 % de procesador en reposo), que reemplaza media docena de utilidades. Incluye:
 
@@ -15,6 +36,55 @@ Todo funciona en el Mac, sin cuentas, sin suscripciones y sin mandar tu voz ni t
 ![El Centro: el día de un vistazo con foco, prioridades, agenda, correos que esperan respuesta y noticias](docs/centro-hoy.jpg)
 
 > **Instalación en un paso:** abre [Claude Code](https://claude.com/claude-code) en esta carpeta y escribe *«instala y configura Dictado»*. Claude sigue las instrucciones de [`CLAUDE.md`](CLAUDE.md), te hace tres preguntas y te guía con los permisos.
+
+## Por qué te va a gustar (aunque no seas técnico)
+
+| Lo que hoy pagas o sufres | Con Dictado |
+|---|---|
+| Escribir correos y mensajes largos | Mantienes **⌥Espacio**, hablas y el texto aparece donde está el cursor, ya con puntuación y sin muletillas. |
+| Perder algo que copiaste hace una hora | **⌘⌥V** y está ahí, con búsqueda: textos, enlaces, imágenes y archivos. |
+| Copiar a mano el texto de una imagen o PDF | **⌘↩ → Texto**: lo seleccionas y queda copiado. |
+| Llegar tarde a una reunión o buscar el enlace | El notch te avisa 5 minutos antes con un botón **Unirse**. |
+| Tomar notas mientras hablas | Dictado graba, transcribe y te deja resumen, decisiones y pendientes. Borra el audio. |
+| No saber por qué el Mac va lento o está lleno | Te dice quién consume y qué puedes borrar sin riesgo, y todo se puede deshacer. |
+
+**Lo que la hace distinta**
+
+- **Tu voz y tus archivos no salen del Mac.** La transcripción y la IA corren en el chip de Apple, no en un servidor.
+- **Sin cuentas, sin suscripción y sin anuncios.** La instalas y funciona.
+- **No se nota que está.** En reposo usa 0 % de procesador: no gasta batería ni hace ruido.
+- **Hecha para personalizarse.** Abres la carpeta con [Claude Code](https://claude.com/claude-code), le pides *«quiero que la isla muestre X»* y lo hace: el código está pensado para eso (ver [`CLAUDE.md`](CLAUDE.md)).
+
+## Construida con
+
+| Capa | Tecnología |
+|---|---|
+| Lenguaje y UI | Swift 6, SwiftUI y AppKit, sin dependencias externas |
+| Voz a texto | `SpeechAnalyzer` (Apple, en el dispositivo) |
+| IA local | `FoundationModels` (Apple Intelligence) para pulir el dictado; `Translation` para traducir sin internet |
+| Pantalla y OCR | `ScreenCaptureKit` y `Vision` |
+| Agenda | `EventKit` (Calendario de macOS, incluidas tus cuentas de Google) |
+| Audio, volumen y brillo | `CoreAudio`, `IOKit` y "Ahora suena" del sistema |
+| Pegado, ventanas y atajos | Accesibilidad (`AXUIElement`), `hidutil` para la tecla hyper |
+| Arranque | `SMAppService` (abrir al iniciar sesión) |
+| Pruebas | Swift Testing sobre `DictadoKit` y renders de cada vista a PNG (`--vista-*`) |
+
+```mermaid
+flowchart LR
+  subgraph Mac["Tu Mac: la voz y los archivos no salen de aquí"]
+    Teclas["Atajos ⌥Espacio · ⌘⌥V · ⌘↩ · Hyper"] --> App
+    subgraph App["Dictado.app"]
+      UI["Vistas SwiftUI<br/>isla · portapapeles · captura · Centro"]
+      Sistema["Puentes al sistema<br/>voz · audio · calendario · ventanas"]
+      Kit["DictadoKit<br/>lógica pura, probada"]
+      UI --> Kit
+      Sistema --> Kit
+    end
+    Sistema <--> Apple["Frameworks de Apple<br/>SpeechAnalyzer · FoundationModels · EventKit · Vision"]
+    App -. "solo lectura" .-> Claude["~/.claude<br/>sesiones de Claude Code"]
+  end
+  App -. "opcional: un comando tuyo que imprime JSON" .-> Centro["Tu sistema<br/>(Centro de mando, agentes)"]
+```
 
 ## Pantallazos
 
